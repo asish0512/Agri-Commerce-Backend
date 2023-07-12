@@ -14,8 +14,6 @@ def getAnnots(request, goatId):
         result = []
         
         for i in data:
-            #i = json.dumps(i)
-            #print(type(list(i['image'])))
             result.append( json.loads( jsonpickle.decode(  json.dumps(i['image']))))
             
         return JsonResponse({'status':'200', 'msg': 'All Load details have been fetched', 'data':result})
@@ -33,7 +31,6 @@ def addAnnot(request):
         dataobj['image'] =  json.dumps( body['data'])
         
         ImageSerialObj = ImageSerializer(data = dataobj)
-        print(ImageSerialObj.is_valid())
         if ImageSerialObj.is_valid():
             ImageSerialObj.save()     
             

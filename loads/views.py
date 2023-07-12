@@ -15,11 +15,9 @@ def addGoatToLoad(request, id):
         body = json.loads(request.body.decode("utf-8"))
         
         GoatSerializerObj = GoatSerializer(data = body)
-        print(type(id))
         loadobj = Load.objects.get(id = id)
         loadobj.goat_count += 1
         
-        loadobj 
         if (body['sex'] == 'Male'):
             loadobj.num_male += 1
         else:
@@ -42,12 +40,10 @@ def addGoatToLoad(request, id):
 def getGoats(request, id):      
     if request.method == 'GET':
         goat_ids = list(GoatsInLoad.objects.filter(load_id = id, status = True).values('goat_id'))
-        #GoatSerializerObj = GoatSerializer(data = body)
         clean_ids = []
         for g in goat_ids:
             clean_ids.append( g['goat_id'])
         data = list (Goat.objects.filter(pk__in = clean_ids).values_list())
-        print(data)
         result = []
         for i in data:
             temp = dict()
@@ -57,7 +53,6 @@ def getGoats(request, id):
             temp['weight'] = i[3]
             temp['photo_url'] = i[4]
             result.append(temp)
-        print(result)
         return JsonResponse({'status':'200', 'msg': 'All Goat details have been fetched', 'data':result})
     return JsonResponse({'status':'400', 'msg': 'Goat details are missing'})
   
@@ -70,7 +65,6 @@ def createLoad(request):
         body['goat_count'] = 0
         body['num_male'] = 0
         body['num_female'] = 0
-      #  body['status'] = True
         LoadSerialObj = LoadSerializer(data = body)
         print(LoadSerialObj.is_valid())
         if LoadSerialObj.is_valid():
@@ -108,7 +102,6 @@ def mergeLoads(request):
                 loadobj.status = False
                 loadobj.save()
                 prevMapping = GoatsInLoad.objects.filter(load_id = load)
-                print(prevMapping)
                 for i in prevMapping:
                     
                     i.status = False
@@ -155,7 +148,7 @@ def splitLoad(request, id):
                     globj.status = False
                     globj.save()
                     
-                    print(globj.load_id)
+                    
                     prevLoadobj = Load.objects.get(id = globj.load_id)
                     prevLoadobj.status = False
                     prevLoadobj.save()

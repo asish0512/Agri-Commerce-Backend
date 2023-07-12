@@ -10,8 +10,7 @@ import json
 @csrf_exempt
 def getGoatsDest(request, place):
     if request.method == 'GET':
-        
-        
+    
         # get all load proceeding to a dest
         goatids = []
         logisticsobj = Logistics.objects.filter(destination = place)
@@ -19,11 +18,9 @@ def getGoatsDest(request, place):
             goatobj = GoatsInLoad.objects.filter(load_id = i.load_id, status = True)
             for g in goatobj:
                 goatids.append(g.goat_id)
-        print(goatids)
         data = list(Goat.objects.filter(id__in = goatids).values())
-        print(data)
-        return JsonResponse({'status':'200', 'msg': 'All Load details have been fetched', 'data':data})
-    return JsonResponse({'status':'400', 'msg': 'Load details could not be fetched'})
+        return JsonResponse({'status':'200', 'msg': 'All goats at a destination have been fetched', 'data':data})
+    return JsonResponse({'status':'400', 'msg': 'goat details could not be fetched'})
 
 
 
@@ -36,8 +33,6 @@ def buyGoats(request):
             globj = GoatsInLoad.objects.get(goat_id=goatid, status = True)
             globj.status = False
             globj.save()
-            
-            
         
-        return JsonResponse( {'status':'200', 'msg': 'Goat details added to current load'})
-    return JsonResponse( {'status':'400', 'msg': 'Goat details are missing'})
+        return JsonResponse( {'status':'200', 'msg': 'Goats have been purchased'})
+    return JsonResponse( {'status':'400', 'msg': 'Goats purchase didnt succeed'})
